@@ -32,14 +32,14 @@ export default function RootLayout({
           name="fc:frame"
           content='{
   "version": "next",
-  "imageUrl": "https://pbs.twimg.com/profile_images/1877532281419739137/I_t8rg_V_200x200.jpg",
+  "imageUrl": "https://drive.google.com/file/d/1Oj3pM-Xj6FmGFxdrEwGV6S1ZByGHUPJ2/view?usp=sharing",
   "button": {
     "title": "✍️ Open Journal",
     "action": {
       "type": "launch_frame",
       "name": "Monad Journal",
       "url": "https://monad-journal-mqt9.vercel.app",
-      "splashImageUrl": "https://pbs.twimg.com/profile_images/1877532281419739137/I_t8rg_V_200x200.jpg",
+      "splashImageUrl": "https://drive.google.com/file/d/1Oj3pM-Xj6FmGFxdrEwGV6S1ZByGHUPJ2/view?usp=sharing",
       "splashBackgroundColor": "#6c54f8"
     }
   }
