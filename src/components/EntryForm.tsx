@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { MintButton } from './MintButton';
 import { JournalEntry } from '@/types/journal';
-import { uploadImageToIPFS } from '@/lib/filebase';
+import { uploadImageToIPFS, uploadToIPFS } from '@/lib/filebase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Notebook, Sparkles, Calendar, Upload, Image, Loader2, Check, RefreshCw, Link } from 'lucide-react';
+
 // File to array buffer conversion
 const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -84,6 +85,7 @@ export function EntryForm() {
         // Convert to base64 string first to avoid Uint8Array serialization issues
         const base64Data = await fileToBase64(imageFile);
         console.log("Converting image to base64 for upload");
+        // const imageBuffer = Buffer.from(base64Data, 'base64');
         const imageHash = await uploadImageToIPFS(base64Data);
         imageUrl = imageHash || "https://placekitten.com/400/400";
       }
@@ -91,7 +93,7 @@ export function EntryForm() {
       // Use portfolio URL if available, otherwise use default
       const externalUrl = portfolioUrl 
         ? portfolioUrl 
-        : `https://builder-journal.app/entry/${entryData.timestamp}`;
+        : null;
 
       const metadata = {
         name: entryData.title,
@@ -106,7 +108,7 @@ export function EntryForm() {
         ],
       };
 
-      const metadataHash = await uploadImageToIPFS(JSON.stringify(metadata));
+      const metadataHash = await uploadToIPFS(JSON.stringify(metadata));
       setIpfsHash(metadataHash);
       setSuccess(true);
       

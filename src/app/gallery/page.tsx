@@ -54,6 +54,7 @@ export default function GalleryPage() {
       if (!window.ethereum) throw new Error('MetaMask not detected');
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log({provider})
       
       // Fetch all journal entries with metadata from the smart contract
       const entriesFromBlockchain = await getAllEntries(provider);

@@ -6,7 +6,7 @@ const filebaseClientImage = new FilebaseClient({
     token: process.env.FILEBASE_API_KEY
 });
 
-export const uploadImageToIPFS = async (fileBuffer: Buffer | string): Promise<string | null> => {
+export const uploadToIPFS = async (fileBuffer: Buffer | string): Promise<string | null> => {
     try {
 
         const content = new Blob([fileBuffer]);
@@ -20,3 +20,16 @@ export const uploadImageToIPFS = async (fileBuffer: Buffer | string): Promise<st
         return null;
     }
 };
+
+export const uploadImageToIPFS = async (base64String: string): Promise<string | null> => {
+    try {
+      const buffer = Buffer.from(base64String, 'base64');
+      const blob = new Blob([buffer]);
+      const cid = await filebaseClientImage.storeBlob(blob);
+      return `https://${GATEWAY}/ipfs/${cid}`;
+    } catch (error) {
+      console.error("Error uploading image to IPFS:", error);
+      return null;
+    }
+  };
+  
