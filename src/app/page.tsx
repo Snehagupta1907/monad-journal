@@ -58,7 +58,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
           <div className="order-2 md:order-1">
             <div className="animate-fadeIn">
-              <h1 className="text-3xl md:text-4xl font-bold text-[#6c54f8] mb-4 md:mb-6">
+              <h1 className="text-3xl md:text-4xl hidden sm:block font-bold text-[#6c54f8] mb-4 md:mb-6">
                 Document Your <span className="text-[#6c54f8] relative">
                   Builder Journey
                   <span className="absolute bottom-0 left-0 w-full h-2 bg-[#6c54f8]/20 rounded-full"></span>
