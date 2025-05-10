@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Poppins } from "next/font/google";
 import { Web3Provider } from "./providers";
-import { FarcasterProvider } from "@/components/FarcasterProvider";
 import "./globals.css";
 
 // Using Poppins font for a more rounded, friendly look
@@ -47,7 +46,7 @@ export default function RootLayout({
         />
       </head>
       <body className={poppins.className}>
-        <FarcasterProvider>
+
           <Web3Provider>
             <div className="min-h-screen bg-white">
               <header className="bg-[#6c54f8] py-3 md:py-4 rounded-b-2xl md:rounded-b-3xl shadow-lg">
@@ -107,7 +106,7 @@ export default function RootLayout({
               </footer>
             </div>
           </Web3Provider>
-        </FarcasterProvider>
+    
       </body>
     </html>
   );
