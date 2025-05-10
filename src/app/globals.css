@@ -25,3 +25,76 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Add this animation to your globals.css */
+@keyframes appear {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-appear {
+  animation: appear 0.3s ease-out forwards;
+}
+
+/* Add these animation keyframes to your globals.css file */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes appear {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.6s ease-out forwards;
+}
+
+.animate-appear {
+  animation: appear 0.3s ease-out forwards;
+}
+
+/* Custom scrollbar for todo list */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #6c54f8;
+  border-radius: 10px;
+  opacity: 0.7;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #5643d6;
+}

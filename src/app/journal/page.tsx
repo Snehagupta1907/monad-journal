@@ -1,0 +1,212 @@
+'use client';
+
+import { useAccount } from 'wagmi';
+import { EntryForm } from '@/components/EntryForm';
+import { WalletConnect } from '@/components/WalletConnect';
+import { motion } from 'framer-motion';
+import { Notebook, ArrowRight, Sparkles, BookOpen } from 'lucide-react';
+
+export default function JournalPage() {
+  const { isConnected } = useAccount();
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.2,
+        duration: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 300, damping: 24 }
+    }
+  };
+
+
+
+  return (
+    <motion.div 
+      className="container mx-auto px-4 sm:px-6 py-8 sm:py-12"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <motion.div 
+        className="max-w-4xl mx-auto"
+        variants={containerVariants}
+      >
+        {/* Header Section */}
+        <motion.div 
+          className="flex flex-col md:flex-row justify-between items-center mb-8 sm:mb-12"
+          variants={itemVariants}
+        >
+          <motion.div className="flex items-center gap-2 sm:gap-3 mb-6 md:mb-0">
+            <motion.div
+              animate={{
+                rotate: [0, 10, 0, -10, 0],
+                transition: { repeat: Infinity, duration: 5 }
+              }}
+            >
+              <BookOpen size={28} className="text-[#6c54f8] sm:w-9 sm:h-9" />
+            </motion.div>
+            <h1 className="text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#6c54f8] to-violet-500">
+              Builder Journal
+            </h1>
+            <motion.div
+              initial={{ scale: 1 }}
+              animate={{ 
+                scale: [1, 1.2, 1],
+                transition: { repeat: Infinity, duration: 2 }
+              }}
+            >
+              <Sparkles size={20} className="text-purple-400 sm:w-6 sm:h-6" />
+            </motion.div>
+          </motion.div>
+          
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <WalletConnect />
+          </motion.div>
+        </motion.div>
+
+        {/* Info Box */}
+        <motion.div 
+          className="bg-gradient-to-r from-purple-50 to-white rounded-2xl p-4 sm:p-8 mb-8 sm:mb-12 border-l-4 border-[#6c54f8] shadow-md"
+          variants={itemVariants}
+          style={{ boxShadow: "0 4px 20px rgba(108, 84, 248, 0.1)" }}
+        >
+          <motion.p 
+            className="text-gray-700 text-base sm:text-lg leading-relaxed"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            Document your builder journey and mint it as an NFT on Monad. Share your progress, 
+            challenges, and insights with the community. Build in public and create a 
+            collection of your achievements!
+          </motion.p>
+          
+          <motion.div 
+            className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            {['journaling', 'building', 'blockchain', 'NFT', 'Monad'].map((tag, index) => (
+              <motion.span 
+                key={index}
+                className="px-2 sm:px-3 py-1 bg-purple-100 text-[#6c54f8] rounded-full text-xs sm:text-sm font-medium"
+                whileHover={{ 
+                  scale: 1.05,
+                  backgroundColor: "#6c54f8",
+                  color: "#ffffff"
+                }}
+              >
+                #{tag}
+              </motion.span>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        {/* Form or Connect Wallet Section */}
+        <motion.div variants={itemVariants}>
+          {isConnected ? (
+            <EntryForm />
+          ) : (
+            <motion.div 
+              className="bg-white rounded-2xl shadow-lg p-6 sm:p-10 text-center border-2 border-purple-100"
+              style={{ 
+                background: "linear-gradient(to bottom right, #ffffff, #f6f3ff)",
+                boxShadow: "0 10px 25px rgba(108, 84, 248, 0.15)" 
+              }}
+              whileHover={{ boxShadow: "0 12px 30px rgba(108, 84, 248, 0.2)" }}
+            >
+              <motion.div 
+                className="mb-4 sm:mb-6 flex justify-center"
+                animate={{ 
+                  y: [0, -10, 0],
+                  transition: { 
+                    repeat: Infinity, 
+                    duration: 3,
+                    ease: "easeInOut"
+                  }
+                }}
+              >
+                <Notebook size={60} className="text-[#6c54f8] sm:w-20 sm:h-20" />
+              </motion.div>
+              
+              <motion.h2 
+                className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 text-[#6c54f8]"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                Connect Your Wallet
+              </motion.h2>
+              
+              <motion.p 
+                className="text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 text-base sm:text-lg"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                Connect your wallet to start documenting your builder journey on Monad and create 
+                your first journal entry NFT!
+              </motion.p>
+              
+              <motion.div 
+                className="flex justify-center items-center gap-2 sm:gap-3"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7 }}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <WalletConnect />
+                </motion.div>
+                
+                <motion.div
+                  animate={{ 
+                    x: [0, 10, 0],
+                    transition: { 
+                      repeat: Infinity, 
+                      duration: 1.5,
+                      ease: "easeInOut"
+                    }
+                  }}
+                >
+                  <ArrowRight size={20} className="text-[#6c54f8] ml-2 sm:w-6 sm:h-6" />
+                </motion.div>
+              </motion.div>
+              
+              <motion.div 
+                className="mt-8 sm:mt-12 pt-4 sm:pt-6 border-t border-purple-100 text-[#6c54f8]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.9 }}
+              >
+                <p className="flex items-center justify-center gap-2">
+                  <Sparkles size={14} className="sm:w-4 sm:h-4" />
+                  <span className="text-sm sm:text-base">Join the builder community today!</span>
+                  <Sparkles size={14} className="sm:w-4 sm:h-4" />
+                </p>
+              </motion.div>
+            </motion.div>
+          )}
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+}
