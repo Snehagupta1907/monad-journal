@@ -1,339 +1,208 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+'use client';
 
-import { useAccount } from "wagmi";
-import { EntryForm } from "@/components/EntryForm";
-import { WalletConnect } from "@/components/WalletConnect";
-import { motion } from "framer-motion";
-import { Notebook, ArrowRight, Sparkles, BookOpen } from "lucide-react";
-import { sdk } from "@farcaster/frame-sdk";
-import { useEffect, useState } from "react";
-import { ethers } from "ethers";
-import { canMintToday } from "@/lib/journal";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { WalletConnect } from '@/components/WalletConnect';
+import { TodoList } from '@/components/TodoList';
+import { Todo } from '@/types/journal';
 
-export default function JournalPage() {
-  const { isConnected, address } = useAccount();
-  const [farcasterUser, setFarcasterUser] = useState<any>(null);
-  const [canMint, setCanMint] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
+export default function HomePage() {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  
+  // Load todos from localStorage on initial load
   useEffect(() => {
-    const initFarcaster = async () => {
+    const storedTodos = localStorage.getItem('builderTodos');
+    if (storedTodos) {
       try {
-        const context = await sdk.context;
-        if (context?.user) {
-          setFarcasterUser(context.user);
-        }
-      } catch (error) {
-        console.error("Failed to get Farcaster context:", error);
+        setTodos(JSON.parse(storedTodos));
+      } catch (e) {
+        console.error('Error parsing todos from localStorage', e);
       }
-    };
-
-    initFarcaster();
+    } else {
+      // Sample todos for new users
+      const sampleTodos: Todo[] = [
+        { id: 1, text: 'Setup Monad development environment', completed: false },
+        { id: 2, text: 'Write my first journal entry', completed: false },
+        { id: 3, text: 'Explore Monad blockchain features', completed: false }
+      ];
+      setTodos(sampleTodos);
+      localStorage.setItem('builderTodos', JSON.stringify(sampleTodos));
+    }
   }, []);
 
-  // Check if user can mint today when wallet is connected
-
-  console.log({isConnected})
-
+  // Update localStorage whenever todos change
   useEffect(() => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const checkMintingStatus = async () => {
-      if (isConnected && address && provider) {
-        console.log(isConnected && address && provider)
-        setIsLoading(true);
-        try {
-          const canUserMint = await canMintToday(
-            provider as ethers.providers.Provider,
-            address
-          );
-          console.log({canUserMint})
-          setCanMint(canUserMint);
-        } catch (error) {
-          console.error("Failed to check minting status:", error);
-          setCanMint(false);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
+    localStorage.setItem('builderTodos', JSON.stringify(todos));
+  }, [todos]);
 
-    checkMintingStatus();
-  }, [isConnected, address]);
-
-  // const handleAddToFarcaster = async () => {
-  //   try {
-  //     await sdk.actions.addFrame();
-  //   } catch (error) {
-  //     console.error("Failed to add to Farcaster:", error);
-  //   }
-  // };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        when: "beforeChildren",
-        staggerChildren: 0.2,
-        duration: 0.1,
-      },
-    },
+  const handleAddTodo = (todo: Todo) => {
+    setTodos([...todos, todo]);
   };
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 300, damping: 24 },
-    },
+  const handleToggleTodo = (id: number) => {
+    setTodos(
+      todos.map(todo =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  const handleDeleteTodo = (id: number) => {
+    setTodos(todos.filter(todo => todo.id !== id));
   };
 
   return (
-    <motion.div
-      className="container mx-auto px-4 sm:px-6 py-8 sm:py-12"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
-      <motion.div className="max-w-4xl mx-auto" variants={containerVariants}>
-        {/* Header Section */}
-        <motion.div
-          className="flex flex-col md:flex-row justify-between items-center mb-8 sm:mb-12"
-          variants={itemVariants}
-        >
-          <motion.div className="flex items-center gap-2 sm:gap-3 mb-6 md:mb-0">
-            <motion.div
-              animate={{
-                rotate: [0, 10, 0, -10, 0],
-                transition: { repeat: Infinity, duration: 5 },
-              }}
-            >
-              <BookOpen size={28} className="text-[#6c54f8] sm:w-9 sm:h-9" />
-            </motion.div>
-            <h1 className="text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#6c54f8] to-violet-500">
-              Builder Journal
-            </h1>
-            {farcasterUser && (
-              <div className="ml-2 text-sm text-gray-600">
-                Welcome, {farcasterUser.displayName || farcasterUser.username}
-              </div>
-            )}
-            <motion.div
-              initial={{ scale: 1 }}
-              animate={{
-                scale: [1, 1.2, 1],
-                transition: { repeat: Infinity, duration: 2 },
-              }}
-            >
-              <Sparkles size={20} className="text-purple-400 sm:w-6 sm:h-6" />
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            className="flex gap-4 items-center"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <WalletConnect />
-            {/* <button
-              onClick={handleAddToFarcaster}
-              className="px-4 py-2 bg-purple-100 text-[#6c54f8] rounded-full text-sm font-medium hover:bg-purple-200 transition-colors"
-            >
-              Add to Farcaster
-            </button> */}
-          </motion.div>
-        </motion.div>
-
-        {/* Info Box */}
-        <motion.div
-          className="bg-gradient-to-r from-purple-50 to-white rounded-2xl p-4 sm:p-8 mb-8 sm:mb-12 border-l-4 border-[#6c54f8] shadow-md"
-          variants={itemVariants}
-          style={{ boxShadow: "0 4px 20px rgba(108, 84, 248, 0.1)" }}
-        >
-          <motion.p
-            className="text-gray-700 text-base sm:text-lg leading-relaxed"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            Document your builder journey and mint it as an NFT on Monad. Share
-            your progress, challenges, and insights with the community. Build in
-            public and create a collection of your achievements!
-          </motion.p>
-
-          <motion.div
-            className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-          >
-            {["journaling", "building", "blockchain", "NFT", "Monad"].map(
-              (tag, index) => (
-                <motion.span
-                  key={index}
-                  className="px-2 sm:px-3 py-1 bg-purple-100 text-[#6c54f8] rounded-full text-xs sm:text-sm font-medium"
-                  whileHover={{
-                    scale: 1.05,
-                    backgroundColor: "#6c54f8",
-                    color: "#ffffff",
-                  }}
-                >
-                  #{tag}
-                </motion.span>
-              )
-            )}
-          </motion.div>
-        </motion.div>
-
-        {/* Form or Connect Wallet Section */}
-        <motion.div variants={itemVariants}>
-          {isConnected ? (
-            <>
-              {isLoading ? (
-                <div className="text-center py-8">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-t-[#6c54f8] border-r-transparent border-b-[#6c54f8] border-l-transparent"></div>
-                  <p className="mt-4 text-gray-600">
-                    Checking if you can mint today...
-                  </p>
-                </div>
-              ) : (
-                <>
-                  {canMint ? (
-                    <EntryForm />
-                  ) : (
-                    <motion.div
-                      className="bg-white rounded-2xl shadow-lg p-6 sm:p-10 text-center border-2 border-purple-100"
-                      style={{
-                        background:
-                          "linear-gradient(to bottom right, #ffffff, #fff0f0)",
-                        boxShadow: "0 10px 25px rgba(248, 84, 84, 0.15)",
-                      }}
+    <div className="container mx-auto px-3 sm:px-4 md:px-6 py-6 md:py-8">
+      {/* Hero Section */}
+      <section className="max-w-6xl mx-auto mb-8 md:mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+          <div className="order-2 md:order-1">
+            <div className="animate-fadeIn">
+              <h1 className="text-3xl md:text-4xl hidden sm:block font-bold text-[#6c54f8] mb-4 md:mb-6">
+                Document Your <span className="text-[#6c54f8] relative">
+                  Builder Journey
+                  <span className="absolute bottom-0 left-0 w-full h-2 bg-[#6c54f8]/20 rounded-full"></span>
+                </span>
+              </h1>
+              <p className="text-lg md:text-xl text-gray-700 mb-6">
+                Create daily journal entries, track your progress, and mint your builder journey as NFTs on the Monad blockchain.
+              </p>
+              <div className="flex flex-wrap gap-3 md:gap-4">
+                <Link href="/journal">
+                  <div className="px-5 py-2.5 bg-[#6c54f8] text-white font-medium rounded-full shadow-md hover:shadow-lg hover:bg-[#5643d6] transition-all duration-200 transform hover:scale-105 text-sm md:text-base flex items-center">
+                    <svg 
+                      className="w-4 h-4 mr-2" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24" 
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <motion.div className="text-red-500 mb-4">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-16 w-16 mx-auto"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </motion.div>
-                      <h2 className="text-2xl text-purple-950 font-bold mb-4">
-                        Daily Mint Limit Reached
-                      </h2>
-                      <p className="text-gray-600 mb-4">
-                        You&apos;ve already minted your journal entry for today.
-                        Please come back tomorrow to continue documenting your
-                        builder journey!
-                      </p>
-                    </motion.div>
-                  )}
-                </>
-              )}
-            </>
-          ) : (
-            <motion.div
-              className="bg-white rounded-2xl shadow-lg p-6 sm:p-10 text-center border-2 border-purple-100"
-              style={{
-                background:
-                  "linear-gradient(to bottom right, #ffffff, #f6f3ff)",
-                boxShadow: "0 10px 25px rgba(108, 84, 248, 0.15)",
-              }}
-              whileHover={{ boxShadow: "0 12px 30px rgba(108, 84, 248, 0.2)" }}
-            >
-              <motion.div
-                className="mb-4 sm:mb-6 flex justify-center"
-                animate={{
-                  y: [0, -10, 0],
-                  transition: {
-                    repeat: Infinity,
-                    duration: 3,
-                    ease: "easeInOut",
-                  },
-                }}
-              >
-                <Notebook
-                  size={60}
-                  className="text-[#6c54f8] sm:w-20 sm:h-20"
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth="2" 
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      />
+                    </svg>
+                    Start Writing
+                  </div>
+                </Link>
+                <Link href="/gallery">
+                  <div className="px-5 py-2.5 bg-[#6c54f8]/10 text-[#6c54f8] font-medium rounded-full hover:bg-[#6c54f8]/20 transition-all duration-200 text-sm md:text-base flex items-center">
+                    <svg 
+                      className="w-4 h-4 mr-2" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24" 
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth="2" 
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    View Gallery
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
+          
+          <div className="order-1 md:order-2">
+         
+            {/* Todo List Component */}
+            <TodoList 
+              todos={todos}
+              onAddTodo={handleAddTodo}
+              onToggleTodo={handleToggleTodo}
+              onDeleteTodo={handleDeleteTodo}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* How it Works Section */}
+      <section className="max-w-6xl mx-auto mb-10 md:mb-16">
+        <h2 className="text-2xl md:text-3xl font-bold text-center text-[#6c54f8] mb-6 md:mb-8">
+          How it Works
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          {[
+            {
+              icon: (
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" 
                 />
-              </motion.div>
+              ),
+              title: "1. Write Daily Entries",
+              description: "Document your progress, challenges, and insights as you build on the Monad blockchain."
+            },
+            {
+              icon: (
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" 
+                />
+              ),
+              title: "2. Track Your Tasks",
+              description: "Add and track tasks to monitor your daily progress and stay accountable to your builder goals."
+            },
+            {
+              icon: (
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" 
+                />
+              ),
+              title: "3. Mint as NFTs",
+              description: "Turn your daily journal entries into NFTs on Monad, creating a permanent record of your builder journey."
+            }
+          ].map((item, index) => (
+            <div key={index} className="bg-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 hover:transform hover:translate-y-[-5px]">
+              <div className="bg-[#6c54f8]/10 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                <svg className="h-6 w-6 text-[#6c54f8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  {item.icon}
+                </svg>
+              </div>
+              <h3 className="text-lg md:text-xl font-semibold mb-2 text-gray-800">{item.title}</h3>
+              <p className="text-gray-600 text-sm md:text-base">
+                {item.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-              <motion.h2
-                className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 text-[#6c54f8]"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                Connect Your Wallet
-              </motion.h2>
-
-              <motion.p
-                className="text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 text-base sm:text-lg"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                Connect your wallet to start documenting your builder journey on
-                Monad and create your first journal entry NFT!
-              </motion.p>
-
-              <motion.div
-                className="flex justify-center items-center gap-2 sm:gap-3"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.7 }}
-              >
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <WalletConnect />
-                </motion.div>
-
-                <motion.div
-                  animate={{
-                    x: [0, 10, 0],
-                    transition: {
-                      repeat: Infinity,
-                      duration: 1.5,
-                      ease: "easeInOut",
-                    },
-                  }}
-                >
-                  <ArrowRight
-                    size={20}
-                    className="text-[#6c54f8] ml-2 sm:w-6 sm:h-6"
-                  />
-                </motion.div>
-              </motion.div>
-
-              <motion.div
-                className="mt-8 sm:mt-12 pt-4 sm:pt-6 border-t border-purple-100 text-[#6c54f8]"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.9 }}
-              >
-                <p className="flex items-center justify-center gap-2">
-                  <Sparkles size={14} className="sm:w-4 sm:h-4" />
-                  <span className="text-sm sm:text-base">
-                    Join the builder community today!
-                  </span>
-                  <Sparkles size={14} className="sm:w-4 sm:h-4" />
-                </p>
-              </motion.div>
-            </motion.div>
-          )}
-        </motion.div>
-      </motion.div>
-    </motion.div>
+      {/* CTA Section */}
+      <section className="max-w-6xl mx-auto mb-8 bg-[#6c54f8]/10 rounded-2xl p-5 md:p-8">
+        <div className="flex flex-col md:flex-row items-center justify-between">
+          <div className="mb-6 md:mb-0 text-center md:text-left">
+            <h2 className="text-xl md:text-2xl font-bold text-[#6c54f8] mb-2 md:mb-4">
+              Ready to Document Your Builder Journey?
+            </h2>
+            <p className="text-gray-700 text-sm md:text-base">
+              Connect your wallet and start writing your first builder journal entry.
+            </p>
+          </div>
+          <div className="flex flex-col space-y-3">
+            <WalletConnect />
+            <Link href="/journal">
+              <div className="text-center px-5 py-2.5 bg-[#6c54f8]/10 text-[#6c54f8] font-medium rounded-full hover:bg-[#6c54f8]/20 transition-all duration-200 text-sm md:text-base">
+                Start Writing
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
