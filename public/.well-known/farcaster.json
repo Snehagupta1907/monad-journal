@@ -1,0 +1,14 @@
+{
+  "frame": {
+    "version": "1",
+    "name": "Monad Journal",
+    "imageUrl": "/og-image.png",
+    "buttonTitle": "✍️ Open Journal",
+    "homeUrl": "https://your-domain.com",
+    "splashImageUrl": "/splash.png",
+    "splashBackgroundColor": "#6c54f8",
+    "description": "Document your builder journey and mint it as an NFT on Monad",
+    "tags": ["journaling", "building", "blockchain", "NFT", "Monad"],
+    "primaryCategory": "productivity"
+  }
+} 

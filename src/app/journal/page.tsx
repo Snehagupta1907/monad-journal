@@ -5,9 +5,35 @@ import { EntryForm } from '@/components/EntryForm';
 import { WalletConnect } from '@/components/WalletConnect';
 import { motion } from 'framer-motion';
 import { Notebook, ArrowRight, Sparkles, BookOpen } from 'lucide-react';
+import { sdk } from '@farcaster/frame-sdk';
+import { useEffect, useState } from 'react';
 
 export default function JournalPage() {
   const { isConnected } = useAccount();
+  const [farcasterUser, setFarcasterUser] = useState<any>(null);
+
+  useEffect(() => {
+    const initFarcaster = async () => {
+      try {
+        const context = await sdk.context;
+        if (context?.user) {
+          setFarcasterUser(context.user);
+        }
+      } catch (error) {
+        console.error('Failed to get Farcaster context:', error);
+      }
+    };
+
+    initFarcaster();
+  }, []);
+
+  const handleAddToFarcaster = async () => {
+    try {
+      await sdk.actions.addFrame();
+    } catch (error) {
+      console.error('Failed to add to Farcaster:', error);
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -29,8 +55,6 @@ export default function JournalPage() {
       transition: { type: "spring", stiffness: 300, damping: 24 }
     }
   };
-
-
 
   return (
     <motion.div 
@@ -60,6 +84,11 @@ export default function JournalPage() {
             <h1 className="text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#6c54f8] to-violet-500">
               Builder Journal
             </h1>
+            {farcasterUser && (
+              <div className="ml-2 text-sm text-gray-600">
+                Welcome, {farcasterUser.displayName || farcasterUser.username}
+              </div>
+            )}
             <motion.div
               initial={{ scale: 1 }}
               animate={{ 
@@ -72,10 +101,17 @@ export default function JournalPage() {
           </motion.div>
           
           <motion.div
+            className="flex gap-4 items-center"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <WalletConnect />
+            <button
+              onClick={handleAddToFarcaster}
+              className="px-4 py-2 bg-purple-100 text-[#6c54f8] rounded-full text-sm font-medium hover:bg-purple-200 transition-colors"
+            >
+              Add to Farcaster
+            </button>
           </motion.div>
         </motion.div>
 

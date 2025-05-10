@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@farcaster/frame-sdk": "^0.0.38",
+    "@farcaster/frame-wagmi-connector": "^0.0.26",
     "@filebase/client": "^0.0.5",
     "@filebase/sdk": "^1.0.6",
     "@rainbow-me/rainbowkit": "^2.2.3",
@@ -22,8 +24,8 @@
     "react-dom": "^18",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
-    "viem": "^2.22.23",
-    "wagmi": "^2.14.11"
+    "viem": "^2.29.1",
+    "wagmi": "^2.15.2"
   },
   "devDependencies": {
     "@types/node": "^20",
