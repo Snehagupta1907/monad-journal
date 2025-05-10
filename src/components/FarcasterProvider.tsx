@@ -1,3 +1,4 @@
+"use client"
 import { WagmiProvider } from 'wagmi';
 import { config } from '@/config/farcaster';
 import { useEffect } from 'react';
