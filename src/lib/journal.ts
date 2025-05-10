@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 
 // Replace with your actual contract address
-export const CONTRACT_ADDRESS = '0x725E46Dfe9B6509C71774e4B10bbB0BdA5ADa650';
+export const CONTRACT_ADDRESS = '0xE2654a34B262aB6399F22a7A75981f2E79DEfbD1';
 
 // Contract ABI
 export const CONTRACT_ABI = [
