@@ -1,9 +1,11 @@
 {
-  "accountAssociation": {
-    "header": "BASE64_ENCODED_HEADER",
-    "payload": "BASE64_ENCODED_PAYLOAD",
-    "signature": "BASE64_ENCODED_SIGNATURE"
-  },
+  
+    "accountAssociation": {
+      "header": "eyJmaWQiOjEwNzY2MzksInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgwOTRBNGNhZTBGOTQyOGI3QmNiZkJiNTlDNEFlZUU2RDhBODEyRDE1In0",
+      "payload": "eyJkb21haW4iOiJtb25hZC1qb3VybmFsLW1xdDkudmVyY2VsLmFwcCJ9",
+      "signature": "MHg4N2U1MDRiMjRkYzRjOWI5ZDI0NDdjZWRlOWI4MTZkZGQ5ZDM4ZjViODQ5MmNmMmYwMmVjYTMwMGU0NmU4Yjc2MDRmODA3NDBjNTBhNDUyNjRhNzBkNjM5MTRmMDhlZTA3MGUyODMzODMzMzkxMjVjMGEzYWQ2NWQ4MmRmODk4NDFj"
+    }
+  ,
   "frame": {
     "version": "1",
     "name": "Monad Journal",
