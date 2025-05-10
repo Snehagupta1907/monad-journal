@@ -1,12 +1,20 @@
 {
+  "accountAssociation": {
+    "header": "BASE64_ENCODED_HEADER",
+    "payload": "BASE64_ENCODED_PAYLOAD",
+    "signature": "BASE64_ENCODED_SIGNATURE"
+  },
   "frame": {
     "version": "1",
     "name": "Monad Journal",
-    "buttonTitle": "✍️ Open Journal",
+    "iconUrl": "https://pbs.twimg.com/profile_images/1877532281419739137/I_t8rg_V_200x200.jpg",
     "homeUrl": "https://monad-journal-mqt9.vercel.app",
+    "imageUrl": "https://pbs.twimg.com/profile_images/1877532281419739137/I_t8rg_V_200x200.jpg",
+    "buttonTitle": "✍️ Open Journal",
+    "splashImageUrl": "https://pbs.twimg.com/profile_images/1877532281419739137/I_t8rg_V_200x200.jpg",
     "splashBackgroundColor": "#6c54f8",
     "description": "Document your builder journey and mint it as an NFT on Monad",
     "tags": ["journaling", "building", "blockchain", "NFT", "Monad"],
     "primaryCategory": "productivity"
   }
-} 
+}

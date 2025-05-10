@@ -1,16 +1,19 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Poppins } from 'next/font/google';
-import { Web3Provider } from './providers';
-import { FarcasterProvider } from '@/components/FarcasterProvider';
-import './globals.css';
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Poppins } from "next/font/google";
+import { Web3Provider } from "./providers";
+import { FarcasterProvider } from "@/components/FarcasterProvider";
+import "./globals.css";
 
 // Using Poppins font for a more rounded, friendly look
-const poppins = Poppins({ weight: ['400', '500', '600', '700'], subsets: ['latin'] });
+const poppins = Poppins({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
-  title: 'Builder Journal on Monad',
-  description: 'Document your builder journey on Monad blockchain as NFTs',
+  title: "Builder Journal on Monad",
+  description: "Document your builder journey on Monad blockchain as NFTs",
 };
 
 export default function RootLayout({
@@ -21,20 +24,27 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-        <meta name="fc:frame" content='{
-          "version": "next",
-          "imageUrl": "/og-image.png",
-          "button": {
-            "title": "✍️ Open Journal",
-            "action": {
-              "type": "launch_frame",
-              "name": "Monad Journal",
-              "splashImageUrl": "/splash.png",
-              "splashBackgroundColor": "#6c54f8"
-            }
-          }
-        }' />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+        />
+        <meta
+          name="fc:frame"
+          content='{
+  "version": "next",
+  "imageUrl": "https://pbs.twimg.com/profile_images/1877532281419739137/I_t8rg_V_200x200.jpg",
+  "button": {
+    "title": "✍️ Open Journal",
+    "action": {
+      "type": "launch_frame",
+      "name": "Monad Journal",
+      "url": "https://monad-journal-mqt9.vercel.app",
+      "splashImageUrl": "https://pbs.twimg.com/profile_images/1877532281419739137/I_t8rg_V_200x200.jpg",
+      "splashBackgroundColor": "#6c54f8"
+    }
+  }
+}'
+        />
       </head>
       <body className={poppins.className}>
         <FarcasterProvider>
@@ -71,22 +81,26 @@ export default function RootLayout({
                   </div>
                 </nav>
               </header>
-              
+
               <main className="container mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8">
                 {children}
               </main>
-              
+
               <footer className="mt-8 md:mt-12 bg-[#6c54f8] rounded-t-2xl md:rounded-t-3xl pt-6 md:pt-8 pb-4 md:pb-6 text-white">
                 <div className="container mx-auto px-3 sm:px-4 md:px-6">
                   <div className="flex flex-col md:flex-row justify-between items-center">
                     <div className="mb-4 md:mb-0">
                       <p className="text-xs md:text-sm text-center md:text-left">
-                        &copy; {new Date().getFullYear()} Builder Journal on Monad
+                        &copy; {new Date().getFullYear()} Builder Journal on
+                        Monad
                       </p>
                     </div>
                     <div className="flex space-x-4 md:space-x-6">
                       <FooterLink href="https://monad.xyz" label="Monad" />
-                      <FooterLink href="https://github.com/yourusername/builder-journal-app" label="GitHub" />
+                      <FooterLink
+                        href="https://github.com/yourusername/builder-journal-app"
+                        label="GitHub"
+                      />
                     </div>
                   </div>
                 </div>
