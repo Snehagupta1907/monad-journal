@@ -4,7 +4,7 @@
     "name": "Monad Journal",
     "imageUrl": "/og-image.png",
     "buttonTitle": "✍️ Open Journal",
-    "homeUrl": "https://your-domain.com",
+    "homeUrl": "https://monad-journal-mqt9.vercel.app",
     "splashImageUrl": "/splash.png",
     "splashBackgroundColor": "#6c54f8",
     "description": "Document your builder journey and mint it as an NFT on Monad",
