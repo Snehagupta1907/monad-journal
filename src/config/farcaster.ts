@@ -1,11 +1,12 @@
 import { http, createConfig } from 'wagmi';
-import { base } from 'wagmi/chains';
+
 import { farcasterFrame } from '@farcaster/frame-wagmi-connector';
+import { monadTestnet } from 'viem/chains';
 
 export const config = createConfig({
-  chains: [base],
+  chains: [monadTestnet],
   transports: {
-    [base.id]: http(),
+    [monadTestnet.id]: http(),
   },
   connectors: [
     farcasterFrame()
