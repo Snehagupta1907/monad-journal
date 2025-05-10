@@ -19,8 +19,8 @@ export function FarcasterProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <WagmiProvider config={config}>
+    // <WagmiProvider config={config}>
       {children}
-    </WagmiProvider>
+    // </WagmiProvider>
   );
 } 

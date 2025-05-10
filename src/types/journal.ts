@@ -16,6 +16,7 @@ export interface Todo {
     date: string;
     author: string;
     timestamp: number;
+    portfolioUrl:string;
   }
   
   /**
